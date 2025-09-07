@@ -8,7 +8,7 @@ namespace LinkedLists
 {
     internal class Node<T>
     {
-        public Node<T>? Element { get; set; }
+        public T? Element { get; set; }
         public Node<T>? PreviousNode { get; set; }
         public Node<T>? NextNode { get; set; }
 
@@ -19,14 +19,14 @@ namespace LinkedLists
             NextNode = null;
         }
 
-        public Node(Node<T> element)
+        public Node(T element)
         {
             Element = element;
             PreviousNode = null;
             NextNode = null;
         }
 
-        public Node(Node<T> element, Node<T> previousNode, Node<T> nextNode)
+        public Node(T element, Node<T> previousNode, Node<T> nextNode)
         {
             Element = element;
             PreviousNode = previousNode;
