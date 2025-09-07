@@ -1,7 +1,9 @@
-# Visual Studio temp files
+# Ignore Visual Studio working folder
 .vs/
+*.vsidx
+
+# Common VS build artifacts
+bin/
+obj/
 *.user
 *.suo
-*.obj
-*.pdb
-*.vsidx
