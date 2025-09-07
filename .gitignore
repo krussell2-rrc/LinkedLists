@@ -1,0 +1,7 @@
+# Visual Studio temp files
+.vs/
+*.user
+*.suo
+*.obj
+*.pdb
+*.vsidx
