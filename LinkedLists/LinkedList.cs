@@ -55,5 +55,35 @@ namespace LinkedLists
 
             return oldElement;
         }
+
+        public T SetLast(T element)
+        {
+            if (Tail == null)
+                throw new InvalidOperationException("List is empty");
+
+            T oldElement = Tail.Element!;
+            Tail.Element = element;
+
+            return oldElement;
+        }
+
+        public void AddFirst(T element)
+        {
+            Node<T> newNode = new Node<T>(element);
+
+            if (Head == null)
+            {
+                Head = newNode;
+                Tail = newNode;
+            }
+            else
+            {
+                newNode.NextNode = Head;
+                Head.PreviousNode = newNode;
+                Head = newNode;
+            }
+
+            Size++;
+        }
     }
 }
