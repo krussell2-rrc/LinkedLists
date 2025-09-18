@@ -790,6 +790,84 @@ namespace LinkedLists
             ClassicAssert.That(list.Head, Is.EqualTo(null));
             ClassicAssert.That(list.Tail, Is.EqualTo(null));
         }
+
+        /// <summary>
+        /// Make sure that calling Get(position) on an empty list results in an exception.
+        /// </summary>
+        [Test]
+        public void Get_By_Position_On_EmptyList_throws_exception_Test()
+        {
+            LinkedList<Employee> list = new LinkedList<Employee>();
+            ClassicAssert.That(() => list.Get(1), Throws.Exception.TypeOf<ApplicationException>());
+        }
+
+        /// <summary>
+        /// Make sure at calling Get(position) with a negative number results in an exception.
+        /// </summary>
+        [Test]
+        public void Get_By_number_less_than_1_on_existingList_throws_exception_Test()
+        {
+            LinkedList<Employee> list = CreateListWithoutMethods(2, out _);
+            ClassicAssert.That(() => list.Get(-1), Throws.Exception.TypeOf<ApplicationException>());
+        }
+
+        /// <summary>
+        /// Ensure that calling Get(positoin) with a value larger than the size of the list results in an exception.
+        /// </summary>
+        [Test]
+        public void Get_By_Position_larger_than_list_size_throws_exception_Test()
+        {
+            LinkedList<Employee> list = CreateListWithoutMethods(2, out _);
+            ClassicAssert.That(() => list.Get(list.Size + 1), Throws.Exception.TypeOf<ApplicationException>());
+        }
+
+        /// <summary>
+        /// Ensure that Get(position) returns the element at the correct position.
+        /// </summary>
+        [Test]
+        public void Get_By_Position_1_on_existingList_returns_head_element_Test()
+        {
+            LinkedList<Employee> list = CreateListWithoutMethods(5, out _);
+            ClassicAssert.That(list.Get(1).CompareTo(list.GetFirst()).Equals(0));
+        }
+
+        /// <summary>D
+        /// Ensure that Get(position) returns the element at the correct position.
+        /// </summary>
+        [Test]
+        public void Get_By_Position_size_on_existingList_returns_tail_element_Test()
+        {
+            LinkedList<Employee> list = CreateListWithoutMethods(5, out _);
+            ClassicAssert.That(list.Get(list.Size).CompareTo(list.GetLast()).Equals(0));
+        }
+
+        /// <summary>
+        /// Ensure that Get(position) returns the element at the correct position.
+        /// </summary>
+        [Test]
+        public void Get_By_Position_3_on_existingList_returns_correct_element_Test()
+        {
+            LinkedList<Employee> list = CreateListWithoutMethods(5, out _);
+            ClassicAssert.That(list.Get(3).CompareTo(list.Head.NextNode.NextNode.Element).Equals(0));
+        }
+
+        /// <summary>
+        /// Ensure that Get(position) returns the element at the correct position.
+        /// </summary>
+        [Test]
+        public void Get_By_Position_on_LARGE_existingList_returns_correct_elements_and_structure_is_not_changed_Test()
+        {
+            LinkedList<Employee> list = CreateListWithoutMethods(10, out _);
+            Node<Employee> node = list.Head;
+            for (int i = 1; i <= list.Size; i++)
+            {
+                ClassicAssert.That(list.Get(i).CompareTo(node.Element).Equals(0));
+                node = node.NextNode;
+            }
+
+            // Head/Tail and all pointers are all intact and correct:
+            CheckIntegrityBetweenAllNodes(list);
+        }
         #endregion
 
         /* HELPER METHODS */

@@ -155,12 +155,31 @@ namespace LinkedLists
             }
             else
             {
-                Tail = Tail.NextNode;
-                Tail!.PreviousNode = null;
+                var newTail = Tail.PreviousNode;
+                newTail!.NextNode = null;
+                Tail = newTail;
             }
 
             Size--;
             return oldNodeElement;
+        }
+
+        public T Get(int position)
+        {
+            if (position <= 0 || position > Size)
+                throw new ApplicationException("The position can not be negative, 0 or higher than the size of the list");
+
+            if(position == 1)
+                return Head!.Element!;
+
+            var element = Head!;
+
+            for (int i = 1; i < position; i++)
+            {
+                element = element.NextNode!;
+            }
+
+            return element.Element!;
         }
     }
 }
