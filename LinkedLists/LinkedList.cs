@@ -169,17 +169,56 @@ namespace LinkedLists
             if (position <= 0 || position > Size)
                 throw new ApplicationException("The position can not be negative, 0 or higher than the size of the list");
 
-            if(position == 1)
-                return Head!.Element!;
-
-            var element = Head!;
+            var node = Head!;
 
             for (int i = 1; i < position; i++)
             {
-                element = element.NextNode!;
+                node = node.NextNode!;
             }
 
-            return element.Element!;
+            return node.Element!;
+        }
+
+        public T Remove(int position)
+        {
+            if (position <= 0 || position > Size)
+                throw new ApplicationException("The position can not be negative, 0 or higher than the size of the list");
+
+            var node = Head!;
+
+            for (int i = 1; i < position; i++)
+            {
+                node = node.NextNode!;
+            }
+
+            var removedNodeElement = node.Element!;
+
+            if(Size == 1)
+            {
+                Head = null;
+                Tail = null;
+                Size --;
+                return removedNodeElement;
+            }
+            else if (position == 1)
+            { 
+                Head = Head!.NextNode;
+                Head!.PreviousNode = null;
+            }
+            else if (position == Size)
+            {
+                Tail = Tail!.PreviousNode;
+                Tail!.NextNode = null;
+            }
+            else
+            {
+                node.PreviousNode!.NextNode = node.NextNode;
+                node.NextNode!.PreviousNode = node.PreviousNode;
+            }
+
+            Size--;
+
+            return removedNodeElement;
         }
     }
 }
