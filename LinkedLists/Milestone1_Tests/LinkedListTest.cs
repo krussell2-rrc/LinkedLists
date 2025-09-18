@@ -1020,6 +1020,150 @@ namespace LinkedLists
             ClassicAssert.That(list.Tail.Element.CompareTo(new Employee(listSize)) == 0);
             ClassicAssert.True(CheckIntegrityBetweenAllNodes(list));
         }
+
+        #region Set(element, position)
+        /// <summary>
+        /// Test Set(position) on an empty list results in an exception.
+        /// </summary>
+        [Test]
+        public void SetByPosition_On_EmptyList_throws_exception_Test()
+        {
+            LinkedList<Employee> list = new LinkedList<Employee>();
+            ClassicAssert.That(() => list.Set(new Employee(1), 1), Throws.Exception.TypeOf<ApplicationException>());
+        }
+
+        /// <summary>
+        /// Test Set(position) with a negative number results in an exception.
+        /// </summary>
+        [Test]
+        public void SetByPosition_Negative_Value_throws_exception_Test()
+        {
+            LinkedList<Employee> list = CreateListWithoutMethods(1, out _);
+            ClassicAssert.That(() => list.Set(new Employee(2), -1), Throws.Exception.TypeOf<ApplicationException>());
+        }
+
+        /// <summary>
+        /// Test Set(position) with a value of zero results in an exception.
+        /// </summary>
+        [Test]
+        public void SetByPosition_Zero_throws_exception_Test()
+        {
+            LinkedList<Employee> list = CreateListWithoutMethods(1, out _);
+            ClassicAssert.That(() => list.Set(new Employee(2), 0), Throws.Exception.TypeOf<ApplicationException>());
+        }
+
+        /// <summary>
+        /// Test Set(position) with a value larger than the size of the list results in an exception.
+        /// </summary>
+        [Test]
+        public void SetByPositionLargerThanSizeTest()
+        {
+            LinkedList<Employee> list = CreateListWithoutMethods(2, out _);
+            ClassicAssert.That(() => list.Set(new Employee(2), list.Size + 1), Throws.Exception.TypeOf<ApplicationException>());
+        }
+
+        /// <summary>
+        /// Ensure that passing null value to Set(element, position) results in an exception.
+        /// </summary>
+        [Test]
+        public void SetByPosition_Null_element_throws_exception_Test()
+        {
+            LinkedList<Employee> list = CreateListWithoutMethods(1, out _);
+            ClassicAssert.That(() => list.Set(null, 1), Throws.Exception.TypeOf<ArgumentNullException>());
+        }
+
+        /// <summary>
+        /// Test Set(position) returns the replaced element.
+        /// </summary>
+        [Test]
+        public void SetByPosition_Returns_old_Element_Test()
+        {
+            LinkedList<Employee> list = CreateListWithoutMethods(1, out _);
+            Employee returnValue = list.Set(new Employee(2), 1);
+            ClassicAssert.That(returnValue.CompareTo(new Employee(1)) == 0); // old value returned
+        }
+
+        /// <summary>
+        /// Ensure that Set(position) sets the element at the correct position 
+        /// Also checks that no changes occured to the size or structure: head/tail/node or their next/previous
+        /// </summary>
+        [Test]
+        public void SetByPosition_1_on_list_of_1_updates_element_does_not_change_list_or_size_Test()
+        {
+            LinkedList<Employee> list = CreateListWithoutMethods(1, out _);
+            Node<Employee> head = list.Head; // saving a pointer to the old head
+            list.Set(new Employee(2), 1);
+            ClassicAssert.That(head.Element.CompareTo(new Employee(2)) == 0); // node in position 1 is now 2
+            ClassicAssert.That(list.Head.Equals(head) && list.Tail.Equals(head)); // the head/tail is still the old head node in memory!
+            ClassicAssert.That(list.Size.Equals(1)); // size hasn't changed
+            // check that pointers are still correct and head/tail has not changed:
+            ClassicAssert.True(CheckIntegrityBetweenAllNodes(list));
+        }
+
+        /// <summary>
+        /// Ensure that Set(position) sets the element at the correct position.
+        /// Also ensures structure remains intact. No changes to Tail/Head/Nodes/Next/Previous/Size.
+        /// </summary>
+        [Test]
+        public void SetByPosition_tail_on_large_list_updates_only_element_Test()
+        {
+            int listSize = 10;
+            Node<Employee>[] nodes;
+            LinkedList<Employee> list = CreateListWithoutMethods(listSize, out nodes);
+            var returnedElement = list.Set(new Employee(listSize + 1), list.Size);
+            ClassicAssert.That(returnedElement.CompareTo(new Employee(listSize)) == 0);
+            ClassicAssert.That(list.Tail.Element.CompareTo(new Employee(listSize + 1)) == 0);
+            for (int i = 1, index = 0; i < listSize; i++, index++)
+            {
+                ClassicAssert.That(nodes[index].Element.CompareTo(new Employee(i)) == 0);
+            }
+            ClassicAssert.That(list.Size.Equals(listSize));
+            ClassicAssert.True(CheckIntegrityBetweenAllNodes(list));
+        }
+
+        /// <summary>
+        /// Ensure that Set(position) sets the element at the correct position.
+        /// Also ensures structure remains intact. No changes to Tail/Head/Nodes/Next/Previous/Size.
+        /// </summary>
+        [Test]
+        public void SetByPosition_head_on_large_list_updates_only_element_Test()
+        {
+            int listSize = 10;
+            Node<Employee>[] nodes;
+            LinkedList<Employee> list = CreateListWithoutMethods(listSize, out nodes);
+            var returnedElement = list.Set(new Employee(listSize + 1), 1);
+            ClassicAssert.That(returnedElement.CompareTo(new Employee(1)) == 0);
+            ClassicAssert.That(list.Head.Element.CompareTo(new Employee(listSize + 1)) == 0);
+            for (int i = 2, index = 1; i <= listSize; i++, index++)
+            {
+                ClassicAssert.That(nodes[index].Element.CompareTo(new Employee(i)) == 0);
+            }
+            ClassicAssert.That(list.Size.Equals(listSize));
+            ClassicAssert.True(CheckIntegrityBetweenAllNodes(list));
+        }
+
+        /// <summary>
+        /// Ensure that Set(position) sets the element at the correct position.
+        /// Also ensures structure remains intact. No changes to Tail/Head/Nodes/Next/Previous/Size.
+        /// </summary>
+        [Test]
+        public void SetByPosition_middle_on_large_list_updates_only_element_Test()
+        {
+            int listSize = 10;
+            Node<Employee>[] nodes;
+            LinkedList<Employee> list = CreateListWithoutMethods(listSize, out nodes);
+            var returnedElement = list.Set(new Employee(listSize + 1), list.Size / 2);
+            ClassicAssert.That(returnedElement.CompareTo(new Employee(list.Size / 2)) == 0);
+            for (int i = 1, index = 0; i <= listSize; i++, index++)
+            {
+                if (i == list.Size / 2)
+                    ClassicAssert.That(nodes[index].Element.CompareTo(new Employee(listSize + 1)) == 0);
+                else
+                    ClassicAssert.That(nodes[index].Element.CompareTo(new Employee(i)) == 0);
+            }
+            ClassicAssert.That(list.Size.Equals(listSize));
+            ClassicAssert.True(CheckIntegrityBetweenAllNodes(list));
+        }
         #endregion
         #endregion
 
@@ -1125,3 +1269,4 @@ namespace LinkedLists
     }
     #endregion
 }
+#endregion

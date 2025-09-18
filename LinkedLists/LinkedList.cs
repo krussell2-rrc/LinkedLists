@@ -198,6 +198,7 @@ namespace LinkedLists
                 Head = null;
                 Tail = null;
                 Size --;
+
                 return removedNodeElement;
             }
             else if (position == 1)
@@ -219,6 +220,38 @@ namespace LinkedLists
             Size--;
 
             return removedNodeElement;
+        }
+
+        public T Set(T element, int position)
+        {
+            if (position <= 0 || position > Size)
+                throw new ApplicationException("The position can not be negative, 0 or higher than the size of the list");
+
+            if (element == null)
+                throw new ArgumentNullException(nameof(element));
+
+            var node = Head!;
+
+            for (int i = 1; i < position; i++)
+            {
+                node = node.NextNode!;
+            }
+
+            var oldElement = node.Element!;
+            node.Element = element;
+
+            return oldElement;
+        }
+
+        public void AddAfter(T element, int position)
+        {
+            if (position <= 0 || position > Size)
+                throw new ApplicationException("The position can not be negative, 0 or higher than the size of the list");
+
+            if (element == null)
+                throw new ArgumentNullException(nameof(element));
+
+
         }
     }
 }
