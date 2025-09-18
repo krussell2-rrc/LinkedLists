@@ -1,7 +1,7 @@
 ﻿using NUnit.Framework;
 using NUnit.Framework.Legacy;
 
-namespace TestLibrary
+namespace LinkedLists
 {
     /// <summary>
     /// IMPORTANT NOTE: DO NOT CHANGE THE TEST CODE!! EVER. :)
@@ -34,8 +34,8 @@ namespace TestLibrary
             Node<Employee> node = new Node<Employee>();
             ClassicAssert.That(node, Is.Not.Null);
             ClassicAssert.That(node.Element, Is.EqualTo(null));
-            ClassicAssert.That(node.Next, Is.Null);
-            ClassicAssert.That(node.Previous, Is.Null);
+            ClassicAssert.That(node.NextNode, Is.Null);
+            ClassicAssert.That(node.PreviousNode, Is.Null);
 
         }
 
@@ -56,8 +56,8 @@ namespace TestLibrary
 
             ClassicAssert.That(node, Is.Not.Null);
             ClassicAssert.That(node.Element, Is.EqualTo(employee3));
-            ClassicAssert.That(node.Next, Is.EqualTo(nextNode));
-            ClassicAssert.That(node.Previous, Is.EqualTo(previousNode));
+            ClassicAssert.That(node.NextNode, Is.EqualTo(nextNode));
+            ClassicAssert.That(node.PreviousNode, Is.EqualTo(previousNode));
 
         }
         #endregion
@@ -89,9 +89,9 @@ namespace TestLibrary
             Node<Employee> previousNode = new Node<Employee>(employee1, null, null);
             Node<Employee> testNode = new Node<Employee>(employee2, null, null);
 
-            testNode.Previous = previousNode;
+            testNode.PreviousNode = previousNode;
 
-            ClassicAssert.That(testNode.Previous, Is.EqualTo(previousNode));
+            ClassicAssert.That(testNode.PreviousNode, Is.EqualTo(previousNode));
 
         }
 
@@ -106,9 +106,9 @@ namespace TestLibrary
             Node<Employee> nextNode = new Node<Employee>(employee1, null, null);
             Node<Employee> testNode = new Node<Employee>(employee2, null, null);
 
-            testNode.Next = nextNode;
+            testNode.NextNode = nextNode;
 
-            ClassicAssert.That(testNode.Next, Is.EqualTo(nextNode));
+            ClassicAssert.That(testNode.NextNode, Is.EqualTo(nextNode));
 
         }
         #endregion

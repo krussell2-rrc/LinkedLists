@@ -1,7 +1,7 @@
 ﻿using NUnit.Framework;
 using System;
 
-namespace TestLibrary
+namespace LinkedLists
 {
     [TestFixture]
     public class NUnitTest

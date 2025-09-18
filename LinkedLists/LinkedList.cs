@@ -32,7 +32,7 @@ namespace LinkedLists
         public T GetFirst()
         {
             if (Head == null)
-                throw new InvalidOperationException("List is empty.");
+                throw new ApplicationException("List is empty");
 
             return Head.Element!;
         }
@@ -40,15 +40,18 @@ namespace LinkedLists
         public T GetLast()
         {
             if (Tail == null)
-                throw new InvalidOperationException("List is empty.");
+                throw new ApplicationException("List is empty");
 
             return Tail.Element!;
         }
 
         public T SetFirst(T element)
         {
-            if (Head == null) 
-                throw new InvalidOperationException("List is empty");
+            if (element == null)
+                throw new ArgumentNullException(nameof(element));
+
+            if (Head == null)
+                throw new ApplicationException("List is empty");
 
             T oldElement = Head.Element!;
             Head.Element = element;
@@ -58,8 +61,11 @@ namespace LinkedLists
 
         public T SetLast(T element)
         {
+            if (element == null)
+                throw new ArgumentNullException(nameof(element));
+
             if (Tail == null)
-                throw new InvalidOperationException("List is empty");
+                throw new ApplicationException("List is empty");
 
             T oldElement = Tail.Element!;
             Tail.Element = element;
@@ -69,6 +75,9 @@ namespace LinkedLists
 
         public void AddFirst(T element)
         {
+            if (element == null)
+                throw new ArgumentNullException(nameof(element));
+
             Node<T> newNode = new Node<T>(element);
 
             if (Head == null)
@@ -84,6 +93,74 @@ namespace LinkedLists
             }
 
             Size++;
+        }
+
+        public void AddLast(T element)
+        {
+            if (element == null)
+                throw new ArgumentNullException(nameof(element));
+
+            Node<T> newNode = new Node<T>(element);
+
+            if (Tail == null)
+            {
+                Head = newNode;
+                Tail = newNode;
+            }
+            else
+            {
+                newNode.PreviousNode = Tail;
+                Tail.NextNode = newNode;
+                Tail = newNode;
+            }
+
+            Size++;
+        }
+
+        public T RemoveFirst()
+        {
+            if (Head == null)
+                throw new ApplicationException("List is empty");
+
+            var oldNodeElement = Head.Element!;
+
+            if (Size == 1)
+            {
+                Head = null;
+                Tail = null;
+
+            }
+            else
+            {
+                Head = Head.NextNode;
+                Head!.PreviousNode = null;
+            }
+
+            Size--;
+            return oldNodeElement;
+        }
+
+        public T RemoveLast()
+        {
+            if (Tail == null)
+                throw new ApplicationException("List is empty");
+
+            var oldNodeElement = Tail.Element!;
+
+            if (Size == 1)
+            {
+                Head = null;
+                Tail = null;
+
+            }
+            else
+            {
+                Tail = Tail.NextNode;
+                Tail!.PreviousNode = null;
+            }
+
+            Size--;
+            return oldNodeElement;
         }
     }
 }

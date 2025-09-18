@@ -1,7 +1,7 @@
 ﻿using NUnit.Framework;
 using NUnit.Framework.Legacy;
 
-namespace TestLibrary
+namespace LinkedLists
 {
     /// <summary>
     /// IMPORTANT NOTE: DO NOT CHANGE THE TEST CODE!! EVER. :)
