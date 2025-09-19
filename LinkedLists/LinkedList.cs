@@ -172,9 +172,7 @@ namespace LinkedLists
             var node = Head!;
 
             for (int i = 1; i < position; i++)
-            {
                 node = node.NextNode!;
-            }
 
             return node.Element!;
         }
@@ -187,9 +185,7 @@ namespace LinkedLists
             var node = Head!;
 
             for (int i = 1; i < position; i++)
-            {
                 node = node.NextNode!;
-            }
 
             var removedNodeElement = node.Element!;
 
@@ -197,7 +193,7 @@ namespace LinkedLists
             {
                 Head = null;
                 Tail = null;
-                Size --;
+                Size--;
 
                 return removedNodeElement;
             }
@@ -233,9 +229,7 @@ namespace LinkedLists
             var node = Head!;
 
             for (int i = 1; i < position; i++)
-            {
                 node = node.NextNode!;
-            }
 
             var oldElement = node.Element!;
             node.Element = element;
@@ -251,7 +245,64 @@ namespace LinkedLists
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
 
+            var node = Head!;
 
+            for (int i = 1; i < position; i++)
+                 node = node.NextNode!;
+
+            var next = node.NextNode;
+
+            Node<T> newNode = new Node<T>(element);
+
+            newNode.PreviousNode = node;
+            newNode.NextNode = next;
+
+            node.NextNode = newNode;
+
+            if (next != null)
+            {
+                next.PreviousNode = newNode;
+            }
+            else
+            {
+                Tail = newNode;
+            }
+
+            Size++;
+        }
+
+        public void AddBefore(T element, int position)
+        {
+            if (position <= 0 || position > Size)
+                throw new ApplicationException("The position can not be negative, 0 or higher than the size of the list");
+
+            if (element == null)
+                throw new ArgumentNullException(nameof(element));
+
+            var node = Head!;
+
+            for (int i = 1; i < position; i++)
+                node = node.NextNode!;
+
+            var previous = node.PreviousNode;
+
+            Node<T> newNode = new Node<T>(element);
+
+            newNode.NextNode = node;
+            newNode.PreviousNode = previous;
+
+            node.PreviousNode = newNode;
+
+            if (previous != null)
+            {
+                previous.NextNode = newNode;
+            }
+            else
+            {
+                Head = newNode;
+            }
+
+            Size++;
         }
     }
 }

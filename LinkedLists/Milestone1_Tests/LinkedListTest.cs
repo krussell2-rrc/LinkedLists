@@ -1164,6 +1164,252 @@ namespace LinkedLists
             ClassicAssert.That(list.Size.Equals(listSize));
             ClassicAssert.True(CheckIntegrityBetweenAllNodes(list));
         }
+        /// <summary>
+        /// Ensure that calling AddAfter() on an empty list will result in an exception.
+        /// </summary>
+        [Test]
+        public void AddAfterPosition_on_EmptyList_throws_exception_test()
+        {
+            LinkedList<Employee> list = new LinkedList<Employee>();
+            ClassicAssert.That(() => list.AddAfter(new Employee(1), 1), Throws.Exception.TypeOf<ApplicationException>());
+        }
+
+        /// <summary>
+        /// Ensure that passing a negative position value to AddAfter(element, position) results in an exception.
+        /// </summary>
+        [Test]
+        public void AddAfterPosition_Negative_Position_throws_exception_Test()
+        {
+            LinkedList<Employee> list = CreateListWithoutMethods(1, out _);
+            ClassicAssert.That(() => list.AddAfter(new Employee(2), -1), Throws.Exception.TypeOf<ApplicationException>());
+        }
+
+        /// <summary>
+        /// Ensure that calling AddBefore(element, position) with a value of zero results in an exception.
+        /// </summary>
+        [Test]
+        public void AddAfterPosition_Zero_throws_exception_Test()
+        {
+            LinkedList<Employee> list = CreateListWithoutMethods(1, out _);
+            ClassicAssert.That(() => list.AddAfter(new Employee(1), 0), Throws.Exception.TypeOf<ApplicationException>());
+        }
+
+        /// <summary>
+        /// Ensure that passing a position value larger than size to AddAfter(element, position) results in an exception.
+        /// </summary>
+        [Test]
+        public void AddAfterPosition_getsize_plus_1_throws_exception_Test()
+        {
+            LinkedList<Employee> list = CreateListWithoutMethods(1, out _);
+            ClassicAssert.That(() => list.AddAfter(new Employee(1), list.Size + 1), Throws.Exception.TypeOf<ApplicationException>());
+        }
+
+        /// <summary>
+        /// Ensure that passing a null element, throws and exception.
+        /// </summary>
+        [Test]
+        public void AddAfterPosition_null_element_throws_exception_Test()
+        {
+            LinkedList<Employee> list = CreateListWithoutMethods(1, out _);
+            ClassicAssert.That(() => list.AddAfter(null, 1), Throws.Exception.TypeOf<ArgumentNullException>());
+        }
+
+        /// <summary>
+        /// AddAfter position 1 on list of 1 updates size and Tail
+        /// </summary>
+        [Test]
+        public void AddAfterByPosition_on_list_of_1_increases_size_updates_tail_Test()
+        {
+            LinkedList<Employee> list = CreateListWithoutMethods(1, out _);
+            list.AddAfter(new Employee(2), 1); // insert 2 after 1
+            ClassicAssert.That(list.Head.Element.CompareTo(new Employee(1)) == 0);
+            ClassicAssert.That(list.Tail.Element.CompareTo(new Employee(2)) == 0);
+            ClassicAssert.That(list.Size.Equals(2));
+            ClassicAssert.True(CheckIntegrityBetweenAllNodes(list));
+        }
+
+        /// <summary>
+        /// AddAfter position 1 on list of 2, adding after head, inserts between head/tail
+        /// </summary>
+        [Test]
+        public void AddAfterByPosition_1_on_list_of_2_adding_inserts_between_head_tail_Test()
+        {
+            LinkedList<Employee> list = CreateListWithoutMethods(2, out _);
+            list.AddAfter(new Employee(3), 1); // insert 3 after 1, list will be: 1, 3, 2
+            ClassicAssert.That(list.Head.Element.CompareTo(new Employee(1)) == 0);
+            ClassicAssert.That(list.Head.NextNode.Element.CompareTo(new Employee(3)) == 0);
+            ClassicAssert.That(list.Tail.Element.CompareTo(new Employee(2)) == 0);
+            ClassicAssert.That(list.Size.Equals(3));
+            ClassicAssert.True(CheckIntegrityBetweenAllNodes(list));
+        }
+
+        /// <summary>
+        /// AddAfter position 1 on list of Five updates size and node pointers
+        /// </summary>
+        [Test]
+        public void AddAfterByPosition_1_on_list_of_5_increases_size_updates_node_pointers_Test()
+        {
+            LinkedList<Employee> list = CreateListWithoutMethods(5, out _);
+            list.AddAfter(new Employee(6), 1); // insert 6 after 1, list will be: 1, 6, 2, 3, 4, 5
+            ClassicAssert.That(list.Head.Element.CompareTo(new Employee(1)) == 0);
+            ClassicAssert.That(list.Head.NextNode.Element.CompareTo(new Employee(6)) == 0);
+            ClassicAssert.That(list.Head.NextNode.NextNode.Element.CompareTo(new Employee(2)) == 0);
+            ClassicAssert.That(list.Tail.Element.CompareTo(new Employee(5)) == 0);
+            ClassicAssert.That(list.Size.Equals(6));
+            ClassicAssert.True(CheckIntegrityBetweenAllNodes(list));
+        }
+
+        /// <summary>
+        /// AddAfter by position in the middle of larger list, updates size, node pointers
+        /// </summary>
+        [Test]
+        public void AddAfterByPosition_on_larger_list_add_after_middle_node_increases_size_updates_node_pointers_Test()
+        {
+            Node<Employee>[] nodes;
+            LinkedList<Employee> list = CreateListWithoutMethods(8, out nodes);
+            list.AddAfter(new Employee(9), 4); // insert 9 after 4: 1, 2, 3, 4, 9, 5, 6, 7, 8
+            ClassicAssert.That(nodes[3].Element.CompareTo(new Employee(4)) == 0);
+            ClassicAssert.That(nodes[3].NextNode.Element.CompareTo(new Employee(9)) == 0);
+            ClassicAssert.That(nodes[4].Element.CompareTo(new Employee(5)) == 0);
+            ClassicAssert.That(nodes[4].PreviousNode.Element.CompareTo(new Employee(9)) == 0);
+            ClassicAssert.That(list.Head.Element.CompareTo(new Employee(1)) == 0);
+            ClassicAssert.That(list.Tail.Element.CompareTo(new Employee(8)) == 0);
+            ClassicAssert.That(list.Size.Equals(9));
+            ClassicAssert.True(CheckIntegrityBetweenAllNodes(list));
+        }
+
+        /// <summary>
+        /// Checking edge case; Ensure that passing the tail position will append to the end of the list without error.
+        /// </summary>
+        [Test]
+        public void AddAfterByPosition_using_last_position_on_existingList_updates_tail_Test()
+        {
+            LinkedList<Employee> list = CreateListWithoutMethods(5, out _);
+            list.AddAfter(new Employee(6), list.Size); // 1, 2, 3, 4, 5 then 6 is added as the tail
+            ClassicAssert.That(list.Size.Equals(6));
+            ClassicAssert.That(list.Head.Element.CompareTo(new Employee(1)) == 0);
+            ClassicAssert.That(list.Tail.PreviousNode.Element.CompareTo(new Employee(5)) == 0);
+            ClassicAssert.That(list.Tail.Element.CompareTo(new Employee(6)) == 0);
+            ClassicAssert.True(CheckIntegrityBetweenAllNodes(list));
+        }
+        #region AddBefore(element, positon)
+        /// <summary>
+        /// Ensure that calling AddBefore() on an empty list will result in an exception.
+        /// </summary>
+        [Test]
+        public void AddBeforePosition_on_EmptyList_throws_exception_test()
+        {
+            LinkedList<Employee> list = new LinkedList<Employee>();
+            ClassicAssert.That(() => list.AddBefore(new Employee(1), 1), Throws.Exception.TypeOf<ApplicationException>());
+        }
+
+        /// <summary>
+        /// Ensure that passing a negative position value to AddBefore(element, position) results in an exception.
+        /// </summary>
+        [Test]
+        public void AddBeforePosition_Negative_Position_throws_exception_Test()
+        {
+            LinkedList<Employee> list = CreateListWithoutMethods(1, out _);
+            ClassicAssert.That(() => list.AddBefore(new Employee(2), -1), Throws.Exception.TypeOf<ApplicationException>());
+        }
+        /// <summary>
+        /// Ensure that calling AddBefore(element, position) with a value of zero results in an exception.
+        /// </summary>
+        [Test]
+        public void AddBeforePosition_Zero_throws_exception_Test()
+        {
+            LinkedList<Employee> list = CreateListWithoutMethods(1, out _);
+            ClassicAssert.That(() => list.AddBefore(new Employee(1), 0), Throws.Exception.TypeOf<ApplicationException>());
+        }
+        /// <summary>
+        /// Ensure that passing a position value larger than size to AddBefore(element, position) results in an exception.
+        /// </summary>
+        [Test]
+        public void AddBeforePosition_getsize_plus_1_throws_exception_Test()
+        {
+            LinkedList<Employee> list = CreateListWithoutMethods(1, out _);
+            ClassicAssert.That(() => list.AddBefore(new Employee(1), list.Size + 1), Throws.Exception.TypeOf<ApplicationException>());
+        }
+
+        /// <summary>
+        /// AddBefore position 1 on list of 1 updates size and Head
+        /// </summary>
+        [Test]
+        public void AddBeforeByPosition_on_list_of_1_increases_size_updates_head_Test()
+        {
+            LinkedList<Employee> list = CreateListWithoutMethods(1, out _);
+            list.AddBefore(new Employee(2), 1); // insert 2 before 1
+            ClassicAssert.That(list.Head.Element.CompareTo(new Employee(2)) == 0);
+            ClassicAssert.That(list.Tail.Element.CompareTo(new Employee(1)) == 0);
+            ClassicAssert.That(list.Size.Equals(2));
+            ClassicAssert.True(CheckIntegrityBetweenAllNodes(list));
+        }
+
+        /// <summary>
+        /// AddBefore position 2 on list of 2, adding before tail, inserts between head/tail
+        /// </summary>
+        [Test]
+        public void AddBeforeByPosition_2_on_list_of_2_adding_inserts_between_head_tail_Test()
+        {
+            LinkedList<Employee> list = CreateListWithoutMethods(2, out _);
+            list.AddBefore(new Employee(3), 2); // insert 3 before 2, list will be: 1, 3, 2
+            ClassicAssert.That(list.Head.Element.CompareTo(new Employee(1)) == 0);
+            ClassicAssert.That(list.Head.NextNode.Element.CompareTo(new Employee(3)) == 0);
+            ClassicAssert.That(list.Tail.Element.CompareTo(new Employee(2)) == 0);
+            ClassicAssert.That(list.Size.Equals(3));
+            ClassicAssert.True(CheckIntegrityBetweenAllNodes(list));
+        }
+
+        /// <summary>
+        /// AddBefore position size on list of Five updates size and node pointers
+        /// </summary>
+        [Test]
+        public void AddBeforeByPosition_last_position_on_list_of_5_increases_size_updates_node_pointers_Test()
+        {
+            LinkedList<Employee> list = CreateListWithoutMethods(5, out _);
+            list.AddBefore(new Employee(6), list.Size); // insert 6 before 5, list will be: 1, 2, 3, 4, 6, 5
+            ClassicAssert.That(list.Head.Element.CompareTo(new Employee(1)) == 0);
+            ClassicAssert.That(list.Tail.PreviousNode.PreviousNode.Element.CompareTo(new Employee(4)) == 0);
+            ClassicAssert.That(list.Tail.PreviousNode.Element.CompareTo(new Employee(6)) == 0);
+            ClassicAssert.That(list.Tail.Element.CompareTo(new Employee(5)) == 0);
+            ClassicAssert.That(list.Size.Equals(6));
+            ClassicAssert.True(CheckIntegrityBetweenAllNodes(list));
+        }
+
+        /// <summary>
+        /// AddBefore by middle position of larger list, updates size, node pointers
+        /// </summary>
+        [Test]
+        public void AddBeforeByPosition_middle_on_larger_list_increases_size_updates_node_pointers_Test()
+        {
+            Node<Employee>[] nodes;
+            LinkedList<Employee> list = CreateListWithoutMethods(8, out nodes);
+            list.AddBefore(new Employee(9), 4); // insert 9 before 4: 1, 2, 3, 9, 4, 5, 6, 7, 8
+            ClassicAssert.That(nodes[2].Element.CompareTo(new Employee(3)) == 0);
+            ClassicAssert.That(nodes[2].NextNode.Element.CompareTo(new Employee(9)) == 0);
+            ClassicAssert.That(nodes[3].Element.CompareTo(new Employee(4)) == 0);
+            ClassicAssert.That(nodes[3].PreviousNode.Element.CompareTo(new Employee(9)) == 0);
+            ClassicAssert.That(list.Head.Element.CompareTo(new Employee(1)) == 0);
+            ClassicAssert.That(list.Tail.Element.CompareTo(new Employee(8)) == 0);
+            ClassicAssert.That(list.Size.Equals(9));
+            ClassicAssert.True(CheckIntegrityBetweenAllNodes(list));
+        }
+
+        /// <summary>
+        /// Checking edge case; Ensure that passing the head position will append to the beginning of the list without error.
+        /// </summary>
+        [Test]
+        public void AddBeforeByPosition_using_first_position_on_existingList_updates_head_Test()
+        {
+            LinkedList<Employee> list = CreateListWithoutMethods(5, out _);
+            list.AddBefore(new Employee(6), 1); // 6, 1, 2, 3, 4, 5 
+            ClassicAssert.That(list.Size.Equals(6));
+            ClassicAssert.That(list.Head.Element.CompareTo(new Employee(6)) == 0);
+            ClassicAssert.That(list.Head.NextNode.Element.CompareTo(new Employee(1)) == 0);
+            ClassicAssert.That(list.Tail.Element.CompareTo(new Employee(5)) == 0);
+            ClassicAssert.True(CheckIntegrityBetweenAllNodes(list));
+        }
+        #endregion
         #endregion
         #endregion
 
