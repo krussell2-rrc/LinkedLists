@@ -9,13 +9,13 @@ namespace LinkedLists
 {
     internal class Employee : IComparable<Employee>
     {
-        public int EmployeeID { get; set; }
+        public int EmployeeID { get; }
         public string? FirstName { get; }
         public string?  LastName { get; }
 
-        public Employee(int employeeID)
-        {
-            EmployeeID = employeeID;
+       public Employee(int employeeID) { 
+        
+           EmployeeID = employeeID;
         }
 
         public Employee(int employeeID, string firstName, string lastName)
@@ -25,21 +25,11 @@ namespace LinkedLists
             LastName = lastName;
         }
 
-        int IComparable<Employee>.CompareTo(Employee? other)
+        public int CompareTo(Employee? other)
         {
             return this.EmployeeID.CompareTo(other?.EmployeeID);
         }
 
-        public override string ToString()
-        {
-            if(FirstName == null && LastName == null)
-            {
-                return $"{EmployeeID} null null";
-            }
-            else
-            {
-                return $"{EmployeeID} {FirstName} {LastName}";
-            }
-        }
+        public override string ToString() => $"{EmployeeID} {FirstName ?? "null"} {LastName ?? "null"}";
     }
 }
